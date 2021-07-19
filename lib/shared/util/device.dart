@@ -60,7 +60,7 @@ class DesktopDevice extends _Device {
     if (System.isLinux) {
       return 'Some Linux machine';
     } else if (System.isMacOS) {
-      return 'Apple';
+      return 'Some Mac machine';
     }
     return 'Some Windows machine';
   }

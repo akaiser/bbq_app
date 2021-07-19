@@ -4,8 +4,8 @@ import 'package:bbq_app/shared/util/system.dart';
 class Environment {
   Environment._();
 
-  static const _prodEnv = 'http://www.sgs-automobile.de';
-  static const _devEnv = 'http://10.0.2.2/own/sgs-automobile';
+  static const _prodEnv = 'https://bbq-be.herokuapp.com';
+  static const _devEnv = 'http://10.0.2.2/own/bbq_be';
 
   static late String _baseUrl;
   static late String _deviceDescription;
@@ -19,7 +19,7 @@ class Environment {
 
   static String get deviceDescription => _deviceDescription;
 
-  static String get webUrl => '$_baseUrl/bbq';
+  static String get webUrl => '$_baseUrl/';
 
   static String get uploadUrl => '$webUrl/upload.php';
 }

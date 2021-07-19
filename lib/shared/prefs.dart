@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const appName = 'DirtyBBQ';
+const appName = 'BBQ App';
 const mainColor = Color(0xff303030);
 const mainTextStyle = TextStyle(fontSize: 16);
 const processInterval = Duration(seconds: 2);

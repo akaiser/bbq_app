@@ -1,4 +1,4 @@
-package com.example.bbq_app
+package de.kaiserv.bbq_app
 
 import io.flutter.embedding.android.FlutterActivity
 
