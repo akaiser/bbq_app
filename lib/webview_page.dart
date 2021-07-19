@@ -47,32 +47,33 @@ class _WebViewPageState extends State<WebViewPage> {
       onWillPop: () => _onWillPop(context),
       child: Scaffold(
         backgroundColor: mainColor,
-        body: Stack(
-          children: [
-            WebView(
-              initialUrl: Environment.webUrl,
-              javascriptMode: JavascriptMode.unrestricted,
-              onPageFinished: (_) => Future.delayed(
-                const Duration(milliseconds: 500),
-                () => setState(() => _isLoading = false),
+        body: SafeArea(
+          child: Stack(
+            children: [
+              WebView(
+                initialUrl: Environment.webUrl,
+                javascriptMode: JavascriptMode.unrestricted,
+                onPageFinished: (_) => Future.delayed(
+                  const Duration(milliseconds: 500),
+                  () => setState(() => _isLoading = false),
+                ),
+                onWebViewCreated: (controller) {
+                  _webViewController = controller;
+                },
               ),
-              onWebViewCreated: (controller) => _webViewController = controller,
-            ),
-            if (_isLoading)
-              Container(
-                color: mainColor,
-                alignment: Alignment.center,
-                child: const CircularProgressIndicator(),
-              ),
-          ],
+              if (_isLoading)
+                Container(
+                  color: mainColor,
+                  alignment: Alignment.center,
+                  child: const CircularProgressIndicator(),
+                ),
+            ],
+          ),
         ),
         floatingActionButton: FloatingActionButton.extended(
           backgroundColor: Colors.black,
           onPressed: () => Navigator.maybePop(context),
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           label: const Text(
             'Back',
             style: TextStyle(color: Colors.white),
