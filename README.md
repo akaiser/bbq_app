@@ -1,9 +1,6 @@
-# bbq_app
-
-# Notes
-iOS Simulator does not support camera
+# BBQ App
 
 | Android  | iOS       | Desktop | Web   |
 |----------|-----------|---------|-------|
-| Emulator | Simulator | Works   | Works |
-|          |           |         |       |
+| Emulator works | no camera support on Simulator | nope | camera not supported yet |
+| Real device works | Real device works | - | - |
