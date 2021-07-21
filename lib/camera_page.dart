@@ -8,6 +8,7 @@ import 'package:bbq_app/shared/ui/preferred_size.dart';
 import 'package:bbq_app/shared/util/environment.dart';
 import 'package:bbq_app/webview_page.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
@@ -16,12 +17,15 @@ import 'package:provider/provider.dart';
 class CameraPage extends StatefulWidget {
   CameraPage(this.cameras, {Key? key})
       : cameraMenuItems = cameras.map(
-          (camera) => DropdownMenuItem(value: camera, child: Text(camera.name)),
+          (camera) => DropdownMenuItem<CameraDescription>(
+            value: camera,
+            child: Text(describeEnum(camera.lensDirection)),
+          ),
         ),
         resolutionMenuItems = ResolutionPreset.values.map(
-          (res) => DropdownMenuItem(
+          (res) => DropdownMenuItem<ResolutionPreset>(
             value: res,
-            child: Text(res.toString().split('.')[1]),
+            child: Text(describeEnum(res)),
           ),
         ),
         super(key: key);
