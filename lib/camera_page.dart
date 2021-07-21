@@ -83,9 +83,11 @@ class _CameraPageState extends State<CameraPage> {
       if (state.isRunning && !state.isProcessing) {
         state.setProcessing(true);
 
-        await _initializeControllerFuture
-            .then((_) => _controller.takePicture())
-            .then((f) => _uploadFile(f, MediaQuery.of(context).orientation))
+        final orientation = MediaQuery.of(context).orientation;
+
+        await _controller
+            .takePicture()
+            .then((file) => _uploadFile(file, orientation))
             .then((_) => state.setProcessing(false));
       }
     } catch (error) {
@@ -171,7 +173,6 @@ class _CameraPageState extends State<CameraPage> {
           if (snapshot.connectionState != ConnectionState.done) {
             return const Center(child: Text('Loading...'));
           } else {
-            // https://medium.com/lightsnap/making-a-full-screen-camera-application-in-flutter-65db7f5d717b
             return SizedBox.expand(
               child: FittedBox(
                 fit: BoxFit.cover,
