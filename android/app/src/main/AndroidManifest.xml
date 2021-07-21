@@ -5,7 +5,8 @@
 
     <application
         android:icon="@mipmap/ic_launcher"
-        android:label="bbq_app">
+        android:label="bbq_app"
+        android:usesCleartextTraffic="${usesCleartextTraffic}">
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
