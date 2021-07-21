@@ -45,7 +45,7 @@ class _CameraPageState extends State<CameraPage> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    SystemChrome.setPreferredOrientations(preferredOrientations);
     _selectedCamera = widget.cameras.first;
     _timer = Timer.periodic(processInterval, (_) => _process());
     _setupCamera();

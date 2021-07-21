@@ -21,5 +21,5 @@ class Environment {
 
   static String get webUrl => '$_baseUrl/';
 
-  static String get uploadUrl => '$webUrl/upload.php';
+  static String get uploadUrl => '${webUrl}upload.php';
 }

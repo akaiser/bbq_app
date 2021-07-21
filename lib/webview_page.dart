@@ -29,7 +29,7 @@ class _WebViewPageState extends State<WebViewPage> {
 
   @override
   void dispose() {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    SystemChrome.setPreferredOrientations(preferredOrientations);
     super.dispose();
   }
 
@@ -49,6 +49,7 @@ class _WebViewPageState extends State<WebViewPage> {
         backgroundColor: mainColor,
         body: SafeArea(
           child: Stack(
+            fit: StackFit.expand,
             children: [
               WebView(
                 initialUrl: Environment.webUrl,
@@ -62,10 +63,9 @@ class _WebViewPageState extends State<WebViewPage> {
                 },
               ),
               if (_isLoading)
-                Container(
+                const ColoredBox(
                   color: mainColor,
-                  alignment: Alignment.center,
-                  child: const CircularProgressIndicator(),
+                  child: Center(child: CircularProgressIndicator()),
                 ),
             ],
           ),
