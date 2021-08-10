@@ -10,13 +10,13 @@ dependencies:
   flutter:
     sdk: flutter
 
-  camera: ^0.8.1+5
+  camera: ^0.8.1+7
   cupertino_icons: ^1.0.3
   device_info_plus: ^2.1.0
   http: ^0.13.3
   provider: ^5.0.0
-  wakelock: ^0.5.2
-  webview_flutter: ^2.0.10
+  wakelock: ^0.5.3+3
+  webview_flutter: ^2.0.12
 
 dev_dependencies:
   flutter_test:
