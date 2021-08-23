@@ -10,7 +10,6 @@ import 'package:bbq_app/webview_page.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
@@ -49,7 +48,6 @@ class _CameraPageState extends State<CameraPage> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setPreferredOrientations([preferredOrientation]);
     _selectedCamera = widget.cameras.first;
     _timer = Timer.periodic(processInterval, (_) => _process());
     _setupCamera();
@@ -57,7 +55,6 @@ class _CameraPageState extends State<CameraPage> {
 
   @override
   void dispose() {
-    SystemChrome.setPreferredOrientations(DeviceOrientation.values);
     _timer.cancel();
     _controller.dispose();
     super.dispose();
@@ -73,9 +70,7 @@ class _CameraPageState extends State<CameraPage> {
       ..setFlashMode(FlashMode.off)
       ..setFocusMode(FocusMode.auto);
 
-    _initializeControllerFuture = _controller
-        .initialize()
-        .then((_) => _controller.lockCaptureOrientation(preferredOrientation));
+    _initializeControllerFuture = _controller.initialize();
   }
 
   Future<void> _process() async {
@@ -85,11 +80,9 @@ class _CameraPageState extends State<CameraPage> {
       if (state.isRunning && !state.isProcessing) {
         state.setProcessing(true);
 
-        final orientation = MediaQuery.of(context).orientation;
-
         await _controller
             .takePicture()
-            .then((file) => _uploadFile(file, orientation))
+            .then(_uploadFile)
             .then((_) => state.setProcessing(false));
       }
     } catch (error) {
@@ -190,16 +183,12 @@ class _CameraPageState extends State<CameraPage> {
     );
   }
 
-  Future<void> _uploadFile(
-    XFile file,
-    Orientation orientation,
-  ) async {
+  Future<void> _uploadFile(XFile file) async {
     final response = await post(
       Uri.parse(Environment.uploadUrl),
       body: {
-        'image': base64Encode(await file.readAsBytes()),
         'device': Environment.deviceDescription,
-        'orientation': orientation.toString().split('.').last,
+        'image': base64Encode(await file.readAsBytes()),
       },
     );
     log('Server returned: ${response.statusCode}');
