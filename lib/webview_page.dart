@@ -39,7 +39,7 @@ class _WebViewPageState extends State<WebViewPage> {
             fit: StackFit.expand,
             children: [
               WebView(
-                initialUrl: Environment.webUrl,
+                initialUrl: Environment.baseUrl,
                 javascriptMode: JavascriptMode.unrestricted,
                 onPageFinished: (_) => Future.delayed(
                   const Duration(milliseconds: 500),

@@ -7,19 +7,15 @@ class Environment {
   static const _prodEnv = 'https://bbq-be.herokuapp.com';
   static const _devEnv = 'http://10.0.2.2/own/bbq_be';
 
-  static late String _baseUrl;
-  static late String _deviceDescription;
+  static late String deviceDescription;
+  static late String baseUrl;
+  static late String uploadUrl;
 
   static Future<void> init() async {
     final isDesktopOrWeb = System.isDesktop || System.isWeb;
     final device = isDesktopOrWeb ? DesktopDevice() : MobileDevice();
-    _baseUrl = await device.isPhysicalDevice ? _prodEnv : _devEnv;
-    _deviceDescription = '${await device.manufacturer} - ${await device.model}';
+    deviceDescription = '${await device.manufacturer} - ${await device.model}';
+    baseUrl = await device.isPhysicalDevice ? _prodEnv : _devEnv;
+    uploadUrl = '$baseUrl/upload.php';
   }
-
-  static String get deviceDescription => _deviceDescription;
-
-  static String get webUrl => '$_baseUrl/';
-
-  static String get uploadUrl => '${webUrl}upload.php';
 }
