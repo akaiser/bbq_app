@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bbq_app/shared/prefs.dart';
 import 'package:bbq_app/shared/util/environment.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewPage extends StatefulWidget {
@@ -19,6 +20,18 @@ class WebViewPage extends StatefulWidget {
 class _WebViewPageState extends State<WebViewPage> {
   bool _isLoading = true;
   late WebViewController _webViewController;
+
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setPreferredOrientations(DeviceOrientation.values);
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setPreferredOrientations([preferredOrientation]);
+    super.dispose();
+  }
 
   Future<bool> _onWillPop(BuildContext context) async {
     if (await _webViewController.canGoBack()) {
