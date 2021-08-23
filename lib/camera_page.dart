@@ -10,7 +10,6 @@ import 'package:bbq_app/webview_page.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
@@ -49,7 +48,6 @@ class _CameraPageState extends State<CameraPage> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setPreferredOrientations(preferredOrientations);
     _selectedCamera = widget.cameras.first;
     _timer = Timer.periodic(processInterval, (_) => _process());
     _setupCamera();
@@ -57,7 +55,6 @@ class _CameraPageState extends State<CameraPage> {
 
   @override
   void dispose() {
-    SystemChrome.setPreferredOrientations(DeviceOrientation.values);
     _timer.cancel();
     _controller.dispose();
     super.dispose();
@@ -120,7 +117,7 @@ class _CameraPageState extends State<CameraPage> {
                       DropdownButtonHideUnderline(
                         child: DropdownButton<CameraDescription>(
                           value: _selectedCamera,
-                          items: [...widget.cameraMenuItems],
+                          items: List.unmodifiable(widget.cameraMenuItems),
                           onChanged: (camera) {
                             if (_selectedCamera != camera) {
                               _selectedCamera = camera!;
@@ -139,7 +136,7 @@ class _CameraPageState extends State<CameraPage> {
                       DropdownButtonHideUnderline(
                         child: DropdownButton<ResolutionPreset>(
                           value: _selectedResolution,
-                          items: [...widget.resolutionMenuItems],
+                          items: List.unmodifiable(widget.resolutionMenuItems),
                           onChanged: (resolution) {
                             if (_selectedResolution != resolution) {
                               _selectedResolution = resolution!;
