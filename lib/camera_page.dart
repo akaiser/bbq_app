@@ -29,7 +29,7 @@ class CameraPage extends StatefulWidget {
         ),
         super(key: key);
 
-  final List<CameraDescription> cameras;
+  final Iterable<CameraDescription> cameras;
   final Iterable<DropdownMenuItem<CameraDescription>> cameraMenuItems;
   final Iterable<DropdownMenuItem<ResolutionPreset>> resolutionMenuItems;
 
@@ -94,71 +94,77 @@ class _CameraPageState extends State<CameraPage> {
     }
   }
 
+  Future<void> _uploadFile(XFile file) async {
+    final response = await post(
+      Uri.parse(Environment.uploadUrl),
+      body: {
+        'device': Environment.deviceDescription,
+        'image': base64Encode(await file.readAsBytes()),
+      },
+    );
+    log('Server returned: ${response.statusCode}');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: PreferredSizeWidgetWrapper(
-        child: Opacity(
-          opacity: 0.6,
-          child: AppBar(
-            titleSpacing: 0,
-            title: Padding(
-              padding: const EdgeInsets.only(top: progressBarHeight),
-              child: Row(
-                children: [
-                  Row(
-                    children: [
-                      const SizedBox(width: 20),
-                      const Text('Cam:', style: mainTextStyle),
-                      const SizedBox(width: 8),
-                      DropdownButtonHideUnderline(
-                        child: DropdownButton<CameraDescription>(
-                          value: _selectedCamera,
-                          items: List.unmodifiable(widget.cameraMenuItems),
-                          onChanged: (camera) {
-                            if (_selectedCamera != camera) {
-                              _selectedCamera = camera!;
-                              setState(_setupCamera);
-                            }
-                          },
-                        ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(width: 8),
-                  Row(
-                    children: [
-                      const Text('Res:', style: mainTextStyle),
-                      const SizedBox(width: 8),
-                      DropdownButtonHideUnderline(
-                        child: DropdownButton<ResolutionPreset>(
-                          value: _selectedResolution,
-                          items: List.unmodifiable(widget.resolutionMenuItems),
-                          onChanged: (resolution) {
-                            if (_selectedResolution != resolution) {
-                              _selectedResolution = resolution!;
-                              setState(_setupCamera);
-                            }
-                          },
-                        ),
+        child: AppBar(
+          backgroundColor: const Color.fromRGBO(0, 0, 0, 0.6),
+          titleSpacing: 0,
+          title: Padding(
+            padding: const EdgeInsets.only(top: progressBarHeight),
+            child: Row(
+              children: [
+                Row(
+                  children: [
+                    const SizedBox(width: 20),
+                    const Text('Cam:', style: mainTextStyle),
+                    const SizedBox(width: 8),
+                    DropdownButtonHideUnderline(
+                      child: DropdownButton<CameraDescription>(
+                        value: _selectedCamera,
+                        items: List.unmodifiable(widget.cameraMenuItems),
+                        onChanged: (camera) {
+                          if (_selectedCamera != camera) {
+                            _selectedCamera = camera!;
+                            setState(_setupCamera);
+                          }
+                        },
                       ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.web),
-                onPressed: () => Navigator.pushNamed(
-                  context,
-                  WebViewPage.route,
+                    )
+                  ],
                 ),
-              )
-            ],
-            bottom: const _ProgressIndicator(),
+                const SizedBox(width: 8),
+                Row(
+                  children: [
+                    const Text('Res:', style: mainTextStyle),
+                    const SizedBox(width: 8),
+                    DropdownButtonHideUnderline(
+                      child: DropdownButton<ResolutionPreset>(
+                        value: _selectedResolution,
+                        items: List.unmodifiable(widget.resolutionMenuItems),
+                        onChanged: (resolution) {
+                          if (_selectedResolution != resolution) {
+                            _selectedResolution = resolution!;
+                            setState(_setupCamera);
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.web),
+              onPressed: () => Navigator.pushNamed(context, WebViewPage.route),
+            )
+          ],
+          bottom: const _ProgressIndicator(),
         ),
       ),
       floatingActionButton: const _ActionButton(),
@@ -182,17 +188,6 @@ class _CameraPageState extends State<CameraPage> {
       ),
     );
   }
-
-  Future<void> _uploadFile(XFile file) async {
-    final response = await post(
-      Uri.parse(Environment.uploadUrl),
-      body: {
-        'device': Environment.deviceDescription,
-        'image': base64Encode(await file.readAsBytes()),
-      },
-    );
-    log('Server returned: ${response.statusCode}');
-  }
 }
 
 class _ProgressIndicator extends StatelessWidget
@@ -208,12 +203,13 @@ class _ProgressIndicator extends StatelessWidget
       height: progressBarHeight,
       child: Selector<AppState, bool>(
         selector: (_, state) => state.isProcessing,
-        builder: (_, isProcessing, __) => isProcessing
-            ? const LinearProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-                backgroundColor: Colors.transparent,
-              )
-            : const SizedBox(),
+        builder: (_, isProcessing, progressIndicator) {
+          return isProcessing ? progressIndicator! : const SizedBox();
+        },
+        child: const LinearProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+          backgroundColor: Colors.transparent,
+        ),
       ),
     );
   }
@@ -224,22 +220,20 @@ class _ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppState>(
-      builder: (_, state, __) {
-        final isRunning = state.isRunning;
-        return FloatingActionButton.extended(
-          onPressed: () => state.setRunning(!isRunning),
-          backgroundColor: isRunning ? Colors.red : Colors.black,
-          label: Text(
-            isRunning ? 'Stop' : 'Record',
-            style: const TextStyle(color: Colors.white),
-          ),
-          icon: Icon(
-            isRunning ? Icons.stop : Icons.fiber_manual_record,
-            color: Colors.white,
-          ),
-        );
-      },
+    return Selector<AppState, bool>(
+      selector: (_, state) => state.isRunning,
+      builder: (context, isRunning, _) => FloatingActionButton.extended(
+        onPressed: () => context.read<AppState>().setRunning(!isRunning),
+        backgroundColor: isRunning ? Colors.red : Colors.black,
+        label: Text(
+          isRunning ? 'Stop' : 'Record',
+          style: const TextStyle(color: Colors.white),
+        ),
+        icon: Icon(
+          isRunning ? Icons.stop : Icons.fiber_manual_record,
+          color: Colors.white,
+        ),
+      ),
     );
   }
 }

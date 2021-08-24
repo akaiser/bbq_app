@@ -10,7 +10,7 @@ class WebViewPage extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  static String route = 'webview_page';
+  static const route = 'webview_page';
 
   @override
   _WebViewPageState createState() => _WebViewPageState();
