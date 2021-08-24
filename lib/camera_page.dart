@@ -40,7 +40,6 @@ class CameraPage extends StatefulWidget {
 class _CameraPageState extends State<CameraPage> {
   late Timer _timer;
   late CameraController _controller;
-  late Future<void> _initializeControllerFuture;
 
   late CameraDescription _selectedCamera;
   var _selectedResolution = ResolutionPreset.medium;
@@ -67,8 +66,6 @@ class _CameraPageState extends State<CameraPage> {
       enableAudio: false,
       imageFormatGroup: ImageFormatGroup.jpeg,
     );
-
-    _initializeControllerFuture = _controller.initialize();
   }
 
   Future<void> _process() async {
@@ -167,9 +164,11 @@ class _CameraPageState extends State<CameraPage> {
       ),
       floatingActionButton: const _ActionButton(),
       body: FutureBuilder<void>(
-        future: _initializeControllerFuture,
-        builder: (_, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
+        future: _controller
+            .initialize()
+            .then((_) => _controller.setFlashMode(FlashMode.off)),
+        builder: (_, __) {
+          if (!_controller.value.isInitialized) {
             return const Center(child: Text('Loading...'));
           } else {
             return SizedBox.expand(
