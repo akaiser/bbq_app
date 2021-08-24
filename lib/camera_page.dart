@@ -66,9 +66,7 @@ class _CameraPageState extends State<CameraPage> {
       _selectedResolution,
       enableAudio: false,
       imageFormatGroup: ImageFormatGroup.jpeg,
-    )
-      ..setFlashMode(FlashMode.off)
-      ..setFocusMode(FocusMode.auto);
+    );
 
     _initializeControllerFuture = _controller.initialize();
   }
