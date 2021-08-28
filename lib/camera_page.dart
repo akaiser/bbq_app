@@ -106,7 +106,7 @@ class _CameraPageState extends State<CameraPage> {
       extendBodyBehindAppBar: true,
       appBar: PreferredSizeWidgetWrapper(
         child: AppBar(
-          backgroundColor: const Color.fromRGBO(0, 0, 0, 0.6),
+          backgroundColor: const Color.fromRGBO(0, 0, 0, 0.5),
           titleSpacing: 0,
           title: Padding(
             padding: const EdgeInsets.only(top: progressBarHeight),

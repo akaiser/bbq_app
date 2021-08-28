@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:developer' show log;
+import 'dart:developer';
 
 import 'package:bbq_app/camera_page.dart';
 import 'package:bbq_app/shared/prefs.dart';
