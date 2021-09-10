@@ -3,8 +3,8 @@ description: BBQ App
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
-  flutter: ">=2.2.0"
+  sdk: ">=2.14.0 <3.0.0"
+  flutter: ">=2.5.0"
 
 dependencies:
   flutter:
@@ -15,10 +15,11 @@ dependencies:
   device_info_plus: ^2.1.0
   http: ^0.13.3
   provider: ^6.0.0
-  wakelock: ^0.5.3+3
+  wakelock: ^0.5.4
   webview_flutter: ^2.0.12
 
 dev_dependencies:
+  flutter_lints: ^1.0.4
   flutter_test:
     sdk: flutter
 
