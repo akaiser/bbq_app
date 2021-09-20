@@ -25,9 +25,7 @@ Future<void> main() async {
           create: (_) => AppState(),
           child: CameraPage(cameras),
         ),
-        routes: {
-          WebViewPage.route: (_) => const WebViewPage(),
-        },
+        routes: {WebViewPage.route: (_) => const WebViewPage()},
       ),
     ),
     (dynamic error, dynamic stack) {

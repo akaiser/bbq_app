@@ -1,22 +1,41 @@
-import 'dart:async';
-
 import 'package:bbq_app/shared/prefs.dart';
 import 'package:bbq_app/shared/util/environment.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class WebViewPage extends StatefulWidget {
-  const WebViewPage({
-    Key? key,
-  }) : super(key: key);
+class WebViewPage extends StatelessWidget {
+  const WebViewPage({Key? key}) : super(key: key);
 
   static const route = 'webview_page';
 
   @override
-  _WebViewPageState createState() => _WebViewPageState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: mainColor,
+      body: const SafeArea(child: _WebViewContainer()),
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Colors.black,
+        onPressed: () => Navigator.maybePop(context),
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        label: const Text(
+          'Back',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+    );
+  }
 }
 
-class _WebViewPageState extends State<WebViewPage> {
+class _WebViewContainer extends StatefulWidget {
+  const _WebViewContainer({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  _WebViewContainerState createState() => _WebViewContainerState();
+}
+
+class _WebViewContainerState extends State<_WebViewContainer> {
   bool _isLoading = true;
   late WebViewController _webViewController;
 
@@ -32,40 +51,24 @@ class _WebViewPageState extends State<WebViewPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () => _onWillPop(context),
-      child: Scaffold(
-        backgroundColor: mainColor,
-        body: SafeArea(
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              WebView(
-                initialUrl: Environment.baseUrl,
-                javascriptMode: JavascriptMode.unrestricted,
-                onPageFinished: (_) => Future.delayed(
-                  const Duration(milliseconds: 500),
-                  () => setState(() => _isLoading = false),
-                ),
-                onWebViewCreated: (controller) {
-                  _webViewController = controller;
-                },
-              ),
-              if (_isLoading)
-                const ColoredBox(
-                  color: mainColor,
-                  child: Center(child: CircularProgressIndicator()),
-                ),
-            ],
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          WebView(
+            initialUrl: Environment.baseUrl,
+            javascriptMode: JavascriptMode.unrestricted,
+            onPageFinished: (_) => Future.delayed(
+              const Duration(milliseconds: 500),
+              () => setState(() => _isLoading = false),
+            ),
+            onWebViewCreated: (controller) => _webViewController = controller,
           ),
-        ),
-        floatingActionButton: FloatingActionButton.extended(
-          backgroundColor: Colors.black,
-          onPressed: () => Navigator.maybePop(context),
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          label: const Text(
-            'Back',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
+          if (_isLoading)
+            const ColoredBox(
+              color: mainColor,
+              child: Center(child: CircularProgressIndicator()),
+            ),
+        ],
       ),
     );
   }
