@@ -12,8 +12,7 @@ class Environment {
   static late String uploadUrl;
 
   static Future<void> init() async {
-    final isDesktopOrWeb = System.isDesktop || System.isWeb;
-    final device = isDesktopOrWeb ? DesktopDevice() : MobileDevice();
+    final device = System.isMobile ? MobileDevice() : DesktopDevice();
     deviceDescription = '${await device.manufacturer} - ${await device.model}';
     baseUrl = await device.isPhysicalDevice ? _prodEnv : _devEnv;
     uploadUrl = '$baseUrl/upload.php';

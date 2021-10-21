@@ -46,7 +46,7 @@ class MobileDevice extends _Device {
     }
 
     return _deviceInfoPlugin.iosInfo
-        .then((info) => info.model)
+        .then((info) => info.utsname.machine)
         .then((model) => model ?? 'NA');
   }
 }
